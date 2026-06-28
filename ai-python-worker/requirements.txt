@@ -1,0 +1,38 @@
+# Summarization Worker Requirements
+# Install with: pip install -r requirements.txt
+
+# MongoDB driver
+pymongo>=4.6.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Date and time handling
+python-dateutil>=2.8.2
+
+# Text processing
+nltk>=3.8.1
+textstat>=0.7.3
+
+# Optional: Advanced text processing
+# spacy>=3.7.0
+# transformers>=4.35.0
+
+# OCR Processing
+PyMuPDF>=1.23.0
+Pillow>=10.0.0
+pytesseract>=0.3.10
+requests>=2.31.0
+
+# Development and testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Logging and monitoring
+colorlog>=6.7.0
+
+# Configuration management
+python-dotenv>=1.0.0
+
+# Firebase Notifications
+firebase-admin>=6.2.0

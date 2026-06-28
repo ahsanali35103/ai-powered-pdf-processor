@@ -1,0 +1,268 @@
+{
+  "test_users": [
+    {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "SecurePass123!",
+      "organization": "Acme Corporation"
+    },
+    {
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com", 
+      "password": "MySecure456!",
+      "organization": "Tech Solutions Inc"
+    },
+    {
+      "name": "Bob Johnson",
+      "email": "bob.johnson@example.com",
+      "password": "StrongPass789!",
+      "organization": "Digital Innovations"
+    }
+  ],
+  
+  "test_organizations": [
+    "Acme Corporation",
+    "Tech Solutions Inc", 
+    "Digital Innovations",
+    "Global Enterprises",
+    "Startup Hub"
+  ],
+  
+  "service_types": [
+    {
+      "type": "ocr",
+      "description": "Optical Character Recognition - Extract text from images and PDFs",
+      "requires_target_language": false
+    },
+    {
+      "type": "summarization", 
+      "description": "Text Summarization - Generate concise summaries of document content",
+      "requires_target_language": false
+    },
+    {
+      "type": "translation",
+      "description": "Text Translation - Translate content to different languages", 
+      "requires_target_language": true
+    }
+  ],
+  
+  "supported_languages": [
+    "english",
+    "spanish", 
+    "french",
+    "german",
+    "italian",
+    "portuguese",
+    "russian",
+    "chinese",
+    "japanese",
+    "korean",
+    "arabic",
+    "hindi"
+  ],
+  
+  "test_files": {
+    "pdf_samples": [
+      {
+        "name": "sample_document.pdf",
+        "description": "Multi-page business document with text and images",
+        "size_mb": 2.5
+      },
+      {
+        "name": "invoice_template.pdf", 
+        "description": "Invoice with tables and formatted text",
+        "size_mb": 0.8
+      },
+      {
+        "name": "research_paper.pdf",
+        "description": "Academic paper with complex formatting",
+        "size_mb": 5.2
+      }
+    ],
+    "image_samples": [
+      {
+        "name": "scanned_receipt.jpg",
+        "description": "Scanned receipt with text",
+        "size_mb": 1.2
+      },
+      {
+        "name": "business_card.png",
+        "description": "Business card image with contact info", 
+        "size_mb": 0.5
+      },
+      {
+        "name": "document_page.jpeg",
+        "description": "Photographed document page",
+        "size_mb": 3.1
+      }
+    ]
+  },
+  
+  "test_scenarios": [
+    {
+      "name": "Complete Workflow Test",
+      "steps": [
+        "Register new user",
+        "Verify email address", 
+        "Login to get access token",
+        "Upload PDF document",
+        "Create OCR service",
+        "Wait for processing completion",
+        "Create summarization service",
+        "Create translation service (Spanish)",
+        "Check all service results",
+        "List user services with filters"
+      ]
+    },
+    {
+      "name": "Multi-User Organization Test",
+      "steps": [
+        "Register multiple users for same organization",
+        "Each user uploads different files",
+        "Create various services for each file",
+        "Verify organization-level service listing",
+        "Test cross-user access restrictions"
+      ]
+    },
+    {
+      "name": "Error Handling Test",
+      "steps": [
+        "Try uploading unsupported file format",
+        "Test file size limit (>20MB)",
+        "Attempt unauthorized access to other user's files",
+        "Create service with missing required fields",
+        "Test invalid service types",
+        "Verify rate limiting enforcement"
+      ]
+    },
+    {
+      "name": "Performance Test",
+      "steps": [
+        "Upload maximum size file (20MB)",
+        "Create multiple concurrent services",
+        "Test bulk service listing",
+        "Measure response times",
+        "Monitor system resource usage"
+      ]
+    }
+  ],
+  
+  "api_endpoints": {
+    "authentication": [
+      {
+        "method": "POST",
+        "endpoint": "/api/auth/signup",
+        "description": "Register new user account"
+      },
+      {
+        "method": "POST", 
+        "endpoint": "/api/auth/verify-signup",
+        "description": "Verify user email address"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/api/auth/login", 
+        "description": "User login and token generation"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/api/auth/logout",
+        "description": "User logout and token revocation"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/api/auth/forgot-password",
+        "description": "Send password reset email"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/api/auth/reset-password",
+        "description": "Reset password with token"
+      }
+    ],
+    "file_management": [
+      {
+        "method": "POST",
+        "endpoint": "/api/file/upload",
+        "description": "Upload PDF or image file"
+      },
+      {
+        "method": "DELETE", 
+        "endpoint": "/api/file/delete",
+        "description": "Delete uploaded file"
+      }
+    ],
+    "service_processing": [
+      {
+        "method": "POST",
+        "endpoint": "/api/service/create",
+        "description": "Create new processing service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/api/service/read", 
+        "description": "Get services for specific file"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/api/service/list",
+        "description": "List all user services with filters"
+      }
+    ]
+  },
+  
+  "sample_requests": {
+    "user_registration": {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "password": "SecurePass123!",
+      "confirm_password": "SecurePass123!"
+    },
+    "user_login": {
+      "email": "john.doe@example.com", 
+      "password": "SecurePass123!"
+    },
+    "ocr_service": {
+      "user_id": "{{user_id}}",
+      "organization_name": "{{organization_name}}",
+      "file_id": "{{file_id}}",
+      "type": "ocr"
+    },
+    "summarization_service": {
+      "user_id": "{{user_id}}",
+      "organization_name": "{{organization_name}}", 
+      "file_id": "{{file_id}}",
+      "type": "summarization"
+    },
+    "translation_service": {
+      "user_id": "{{user_id}}",
+      "organization_name": "{{organization_name}}",
+      "file_id": "{{file_id}}",
+      "type": "translation",
+      "target_language": "spanish"
+    }
+  },
+  
+  "expected_responses": {
+    "success_format": {
+      "success": true,
+      "message": "Operation completed successfully",
+      "errors": null,
+      "data": {}
+    },
+    "error_format": {
+      "success": false,
+      "message": "Error description",
+      "errors": ["Detailed error messages"],
+      "data": null
+    },
+    "validation_error": {
+      "success": false,
+      "message": "Validation Failed", 
+      "errors": {
+        "field_name": ["Field specific error messages"]
+      },
+      "data": null
+    }
+  }
+}

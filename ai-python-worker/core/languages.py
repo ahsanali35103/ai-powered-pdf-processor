@@ -1,0 +1,21 @@
+SUPPORTED_LANGUAGES = {
+    "en": "English",
+    "ur": "Urdu",
+    "ar": "Arabic",
+    "hi": "Hindi",
+    "fr": "French",
+    "es": "Spanish",
+    "de": "German",
+    "it": "Italian",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "zh": "Chinese (Simplified)",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "tr": "Turkish",
+    "nl": "Dutch",
+    "sv": "Swedish",
+    "pl": "Polish",
+    "fa": "Persian",
+    "ur": "Urdu"
+}

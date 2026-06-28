@@ -1,0 +1,247 @@
+{
+	"id": "ai-pdf-complete-environment",
+	"name": "AI PDF Processing - Complete Environment",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000",
+			"description": "Laravel API base URL",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "worker_url",
+			"value": "http://localhost:5000",
+			"description": "Python worker/summarizer API base URL",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "mongo_url",
+			"value": "mongodb://localhost:27017",
+			"description": "MongoDB connection URL",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "mongo_admin_url",
+			"value": "http://localhost:28017",
+			"description": "MongoDB admin interface URL (if enabled)",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "database_name",
+			"value": "ai_pdf_processor",
+			"description": "MongoDB database name",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"description": "JWT access token (auto-populated after login)",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "user_id",
+			"value": "019db573d4e571ec88666549c1637d66",
+			"description": "User ID (auto-populated after login)",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "organization_name",
+			"value": "Test Organization",
+			"description": "Organization name for multi-tenant testing",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "file_id",
+			"value": "69e8d2d3d031d02cc605a422",
+			"description": "File ID (auto-populated after file upload)",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ocr_service_id",
+			"value": "",
+			"description": "OCR Service ID (auto-populated after OCR service creation)",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "summary_service_id",
+			"value": "",
+			"description": "Summarization Service ID (auto-populated after summarization service creation)",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "translation_service_id",
+			"value": "",
+			"description": "Translation Service ID (auto-populated after translation service creation)",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "verification_token",
+			"value": "",
+			"description": "Email verification token (from email)",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "reset_token",
+			"value": "",
+			"description": "Password reset token (from email)",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "test_email",
+			"value": "john.doe@example.com",
+			"description": "Test user email address",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "test_password",
+			"value": "SecurePass123!",
+			"description": "Test user password",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "new_password",
+			"value": "NewSecurePass123!",
+			"description": "New password for reset testing",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "test_name",
+			"value": "John Doe",
+			"description": "Test user full name",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "target_language",
+			"value": "spanish",
+			"description": "Target language for translation services",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "alternative_language",
+			"value": "french",
+			"description": "Alternative language for testing",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "test_organization_2",
+			"value": "Acme Corporation",
+			"description": "Second organization for multi-tenant testing",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "test_user_2_email",
+			"value": "jane.smith@example.com",
+			"description": "Second test user email",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "test_user_2_password",
+			"value": "AnotherPass456!",
+			"description": "Second test user password",
+			"type": "secret",
+			"enabled": true
+		},
+		{
+			"key": "test_user_2_name",
+			"value": "Jane Smith",
+			"description": "Second test user name",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "max_file_size_mb",
+			"value": "20",
+			"description": "Maximum file size in MB",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "supported_file_types",
+			"value": "pdf,jpg,jpeg,png",
+			"description": "Supported file types for upload",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "supported_languages",
+			"value": "english,spanish,french,german,italian,portuguese,russian,chinese,japanese,korean",
+			"description": "Supported languages for translation",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "service_types",
+			"value": "ocr,summarize,translate",
+			"description": "Available service types",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "service_statuses",
+			"value": "pending,processing,completed,failed",
+			"description": "Possible service statuses",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "api_version",
+			"value": "v1",
+			"description": "API version",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "request_timeout",
+			"value": "30000",
+			"description": "Request timeout in milliseconds",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "retry_attempts",
+			"value": "3",
+			"description": "Number of retry attempts for failed requests",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "test_mode",
+			"value": "true",
+			"description": "Enable test mode features",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "debug_logging",
+			"value": "true",
+			"description": "Enable debug logging in tests",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2026-04-22T12:00:00.000Z",
+	"_postman_exported_using": "Postman/10.0.0"
+}

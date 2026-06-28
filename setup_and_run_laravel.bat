@@ -1,0 +1,6 @@
+@echo off
+cd /d C:\Users\ahsan\Desktop\newproject\AI-Powered-pdf-Processer\ai-pdf-laravel
+echo Installing Composer dependencies...
+composer install
+echo Dependencies installed. Starting Laravel server...
+php artisan serve --host=127.0.0.1 --port=8000

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCM Token Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4">
+    <div class="glass-card p-8 w-full max-max-w-2xl shadow-2xl">
+        <h1 class="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+            FCM Token Generator
+        </h1>
+        
+        <div class="space-y-6">
+            <div id="status" class="p-4 rounded-lg bg-slate-800 border border-slate-700 text-sm">
+                Waiting for initialization...
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-400 mb-2">Generated Token</label>
+                <div id="token-display" class="p-4 bg-black rounded-lg border border-slate-700 break-all font-mono text-xs text-green-400 min-h-[60px] flex items-center justify-center">
+                    No token generated yet
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <button id="generate-btn" class="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-xl font-semibold transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                    Generate FCM Token
+                </button>
+                <button id="save-btn" disabled class="w-full py-3 px-6 bg-slate-700 text-slate-400 rounded-xl font-semibold transition-all cursor-not-allowed">
+                    Save Token to Database
+                </button>
+            </div>
+
+            <div class="pt-4 border-t border-slate-700">
+                <label class="block text-sm font-medium text-slate-400 mb-2">Auth Token (Bearer)</label>
+                <input type="text" id="auth-token" placeholder="Enter your API Bearer Token here" 
+                    class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-sm focus:outline-none focus:border-blue-500">
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBG91G7CeEw-x1wzt6QfNwjGyH2Ps2XcXI",
+            authDomain: "chat-5810e.firebaseapp.com",
+            projectId: "chat-5810e",
+            storageBucket: "chat-5810e.firebasestorage.app",
+            messagingSenderId: "431177868521",
+            appId: "1:431177868521:web:c287ecf6228b146cf33c78",
+            measurementId: "G-TKCFY15B7F"
+        };
+
+
+        const vapidKey = "BFUxGl5lgDKrdGlsCNwKTpW3jjvTsy5I3up_XaBixFb3KB8ZVBTKbKNaBav80gZ-nZLGRyH365sgVFqr-ok4Ab4";
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
+
+        const statusEl = document.getElementById('status');
+        const tokenDisplay = document.getElementById('token-display');
+        const generateBtn = document.getElementById('generate-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const authTokenInput = document.getElementById('auth-token');
+
+        let currentToken = null;
+
+        // Origin Check
+        if (window.location.protocol === 'file:') {
+            setStatus('CRITICAL: This page must be accessed via a web server (http:// or https://) to register a Service Worker.', 'error');
+            document.getElementById('generate-btn').disabled = true;
+            document.getElementById('generate-btn').classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        function setStatus(msg, type = 'info') {
+            statusEl.innerText = msg;
+            statusEl.className = `p-4 rounded-lg border text-sm ${
+                type === 'error' ? 'bg-red-900/20 border-red-500 text-red-400' : 
+                type === 'success' ? 'bg-green-900/20 border-green-500 text-green-400' : 
+                'bg-slate-800 border-slate-700 text-slate-300'
+            }`;
+        }
+
+        generateBtn.onclick = async () => {
+            try {
+                setStatus('Requesting permission...');
+                const permission = await Notification.requestPermission();
+                
+                if (permission === 'granted') {
+                    setStatus('Generating token...');
+                    
+                    // Register Service Worker explicitly
+                    const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                    console.log('Service Worker registered with scope:', registration.scope);
+
+                    const token = await getToken(messaging, { 
+                        vapidKey: vapidKey,
+                        serviceWorkerRegistration: registration
+                    });
+
+                    if (token) {
+                        currentToken = token;
+                        tokenDisplay.innerText = token;
+                        saveBtn.disabled = false;
+                        saveBtn.className = "w-full py-3 px-6 bg-green-600 hover:bg-green-500 rounded-xl font-semibold transition-all transform hover:scale-[1.02] active:scale-[0.98]";
+                        setStatus('Token generated successfully!', 'success');
+                    } else {
+                        setStatus('No registration token available. Request permission to generate one.', 'error');
+                    }
+                } else {
+                    setStatus('Unable to get permission to notify.', 'error');
+                }
+            } catch (err) {
+                console.error('An error occurred while retrieving token. ', err);
+                setStatus('Error: ' + err.message, 'error');
+            }
+        };
+
+        saveBtn.onclick = async () => {
+            const authToken = authTokenInput.value.trim();
+            if (!authToken) {
+                setStatus('Please enter an Auth Token first', 'error');
+                return;
+            }
+
+            const baseUrl = window.location.origin;
+            const apiUrl = `${baseUrl}/api/file/fcm/token`;
+
+
+            try {
+                setStatus(`Saving token to ${apiUrl}...`);
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ token: currentToken })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setStatus('Token saved to database successfully!', 'success');
+                } else {
+                    setStatus(`Failed to save: ${data.message || response.statusText}`, 'error');
+                }
+            } catch (err) {
+                console.error('Error saving token:', err);
+                setStatus('Network error occurred while saving token', 'error');
+            }
+        };
+
+        if (window.location.protocol !== 'file:') {
+            setStatus('Ready to generate token');
+        }
+
+    </script>
+</body>
+</html>

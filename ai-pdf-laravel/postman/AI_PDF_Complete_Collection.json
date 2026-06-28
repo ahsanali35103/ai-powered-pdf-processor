@@ -1,0 +1,870 @@
+{
+	"info": {
+		"_postman_id": "ai-pdf-complete-collection",
+		"name": "AI PDF Processing - Complete Collection",
+		"description": "Complete API collection for AI PDF processing system including Authentication, File Management, Service Processing, and Worker Testing endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "🔐 Authentication",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{test_name}}\",\n    \"email\": \"{{test_email}}\",\n    \"password\": \"{{test_password}}\",\n    \"confirm_password\": \"{{test_password}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "Register a new user account. Sends email verification."
+					}
+				},
+				{
+					"name": "Verify Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{test_email}}\",\n    \"token\": \"{{verification_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/verify-signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"verify-signup"
+							]
+						},
+						"description": "Verify user email with token received via email."
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.access_token) {",
+									"        pm.environment.set('access_token', response.data.access_token);",
+									"        pm.environment.set('user_id', response.data.user.id);",
+									"        console.log('✅ Access token saved:', response.data.access_token);",
+									"        console.log('✅ User ID saved:', response.data.user.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{test_email}}\",\n    \"password\": \"{{test_password}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login user and get access token. Token and user ID are automatically saved to environment."
+					}
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Logout user and revoke access token."
+					}
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{test_email}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/forgot-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"forgot-password"
+							]
+						},
+						"description": "Send password reset link to user email."
+					}
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{test_email}}\",\n    \"token\": \"{{reset_token}}\",\n    \"password\": \"{{new_password}}\",\n    \"confirm_password\": \"{{new_password}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/reset-password",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"reset-password"
+							]
+						},
+						"description": "Reset password using token from email."
+					}
+				}
+			],
+			"description": "Authentication endpoints for user registration, login, and password management."
+		},
+		{
+			"name": "📁 File Management",
+			"item": [
+				{
+					"name": "Upload File",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.file_id) {",
+									"        pm.environment.set('file_id', response.data.file_id);",
+									"        console.log('✅ File ID saved:', response.data.file_id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"description": "PDF or image file to upload (max 20MB)"
+								},
+								{
+									"key": "user_id",
+									"value": "{{user_id}}",
+									"type": "text",
+									"description": "ID of user uploading the file"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/file/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"file",
+								"upload"
+							]
+						},
+						"description": "Upload a PDF or image file. Supports PDF, JPG, JPEG, PNG formats up to 20MB. File ID is automatically saved to environment."
+					}
+				},
+				{
+					"name": "Delete File",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"file_id\": \"{{file_id}}\",\n    \"user_id\": \"{{user_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/file/delete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"file",
+								"delete"
+							]
+						},
+						"description": "Delete a file by ID. Only the file owner can delete it."
+					}
+				}
+			],
+			"description": "File upload and management endpoints."
+		},
+		{
+			"name": "🔄 Service Processing",
+			"item": [
+				{
+					"name": "Create OCR Service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.service_id) {",
+									"        pm.environment.set('ocr_service_id', response.data.service_id);",
+									"        console.log('✅ OCR Service ID saved:', response.data.service_id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{user_id}}\",\n    \"organization_name\": \"{{organization_name}}\",\n    \"file_id\": \"{{file_id}}\",\n    \"type\": \"ocr\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/service/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service",
+								"create"
+							]
+						},
+						"description": "Create OCR service to extract text from uploaded file."
+					}
+				},
+				{
+					"name": "Create Summarization Service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.service_id) {",
+									"        pm.environment.set('summary_service_id', response.data.service_id);",
+									"        console.log('✅ Summarization Service ID saved:', response.data.service_id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{user_id}}\",\n    \"organization_name\": \"{{organization_name}}\",\n    \"file_id\": \"{{file_id}}\",\n    \"type\": \"summarize\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/service/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service",
+								"create"
+							]
+						},
+						"description": "Create summarization service to generate summary of file content. Requires OCR to be completed first."
+					}
+				},
+				{
+					"name": "Create Translation Service",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.success && response.data.service_id) {",
+									"        pm.environment.set('translation_service_id', response.data.service_id);",
+									"        console.log('✅ Translation Service ID saved:', response.data.service_id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{user_id}}\",\n    \"organization_name\": \"{{organization_name}}\",\n    \"file_id\": \"{{file_id}}\",\n    \"type\": \"translation\",\n    \"target_language\": \"{{target_language}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/service/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service",
+								"create"
+							]
+						},
+						"description": "Create translation service to translate file content to target language."
+					}
+				},
+				{
+					"name": "Read Service Results",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/service/read?file_id={{file_id}}&user_id={{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service",
+								"read"
+							],
+							"query": [
+								{
+									"key": "file_id",
+									"value": "{{file_id}}",
+									"description": "ID of the file to get services for"
+								},
+								{
+									"key": "user_id",
+									"value": "{{user_id}}",
+									"description": "ID of the user (for authorization)"
+								}
+							]
+						},
+						"description": "Get all processing services and their results for a specific file."
+					}
+				},
+				{
+					"name": "List User Services",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/service/list?user_id={{user_id}}&organization_name={{organization_name}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service",
+								"list"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{user_id}}",
+									"description": "ID of the user"
+								},
+								{
+									"key": "organization_name",
+									"value": "{{organization_name}}",
+									"description": "Name of the organization"
+								},
+								{
+									"key": "type",
+									"value": "",
+									"description": "Filter by service type (ocr, summarization, translation)",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "",
+									"description": "Filter by status (pending, processing, completed, failed)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all services for a user within an organization. Optional filters for type and status."
+					}
+				},
+				{
+					"name": "List Services - Filter by Type",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/service/list?user_id={{user_id}}&organization_name={{organization_name}}&type=summarize",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service",
+								"list"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{user_id}}"
+								},
+								{
+									"key": "organization_name",
+									"value": "{{organization_name}}"
+								},
+								{
+									"key": "type",
+									"value": "summarize",
+									"description": "Filter by summarization services only"
+								}
+							]
+						},
+						"description": "Get only summarization services for a user."
+					}
+				},
+				{
+					"name": "List Services - Filter by Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/service/list?user_id={{user_id}}&organization_name={{organization_name}}&status=completed",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"service",
+								"list"
+							],
+							"query": [
+								{
+									"key": "user_id",
+									"value": "{{user_id}}"
+								},
+								{
+									"key": "organization_name",
+									"value": "{{organization_name}}"
+								},
+								{
+									"key": "status",
+									"value": "completed",
+									"description": "Filter by completed services only"
+								}
+							]
+						},
+						"description": "Get only completed services for a user."
+					}
+				}
+			],
+			"description": "Service processing endpoints for OCR, summarization, and translation."
+		},
+		{
+			"name": "🐍 Worker Testing",
+			"item": [
+				{
+					"name": "Test Summarization Worker",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"This is a sample document for testing summarization. The document contains multiple sentences that need to be processed by the summarization algorithm. The algorithm should extract the most important information and create a concise summary. This test helps verify that the summarization worker is functioning correctly and can process text content effectively.\",\n    \"summary_type\": \"general\"\n}"
+						},
+						"url": {
+							"raw": "{{worker_url}}/test/summarize",
+							"host": [
+								"{{worker_url}}"
+							],
+							"path": [
+								"test",
+								"summarize"
+							]
+						},
+						"description": "Test summarization algorithm directly with sample text."
+					}
+				},
+				{
+					"name": "Check Worker Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{worker_url}}/health",
+							"host": [
+								"{{worker_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check if summarization worker is running and healthy."
+					}
+				},
+				{
+					"name": "Get Worker Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{worker_url}}/status",
+							"host": [
+								"{{worker_url}}"
+							],
+							"path": [
+								"status"
+							]
+						},
+						"description": "Get detailed status information about the worker."
+					}
+				}
+			],
+			"description": "Direct testing endpoints for the summarization worker."
+		},
+		{
+			"name": "🗄️ Database Operations",
+			"item": [
+				{
+					"name": "Check MongoDB Connection",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{mongo_admin_url}}/admin/serverStatus",
+							"host": [
+								"{{mongo_admin_url}}"
+							],
+							"path": [
+								"admin",
+								"serverStatus"
+							]
+						},
+						"description": "Test MongoDB connection and get server status."
+					}
+				},
+				{
+					"name": "Insert Test Service (Direct DB)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{user_id}}\",\n    \"organization_name\": \"{{organization_name}}\",\n    \"file_id\": \"{{file_id}}\",\n    \"type\": \"summarization\",\n    \"status\": \"pending\",\n    \"created_at\": \"{{$isoTimestamp}}\",\n    \"updated_at\": \"{{$isoTimestamp}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/test/insert-service",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"insert-service"
+							]
+						},
+						"description": "Insert a test service directly into MongoDB for worker testing."
+					}
+				}
+			],
+			"description": "Database testing and direct operations."
+		},
+		{
+			"name": "🧪 Complete Workflow Tests",
+			"item": [
+				{
+					"name": "Complete Workflow - OCR + Summarization",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// This test requires a file to be uploaded first",
+									"if (!pm.environment.get('file_id')) {",
+									"    console.log('⚠️ Please upload a file first using the File Upload endpoint');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{user_id}}\",\n    \"organization_name\": \"{{organization_name}}\",\n    \"file_id\": \"{{file_id}}\",\n    \"services\": [\n        {\n            \"type\": \"ocr\"\n        },\n        {\n            \"type\": \"summarization\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/test/workflow/ocr-summarization",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"workflow",
+								"ocr-summarization"
+							]
+						},
+						"description": "Test complete workflow: OCR followed by summarization."
+					}
+				},
+				{
+					"name": "Complete Workflow - All Services",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"{{user_id}}\",\n    \"organization_name\": \"{{organization_name}}\",\n    \"file_id\": \"{{file_id}}\",\n    \"target_language\": \"{{target_language}}\",\n    \"services\": [\n        {\n            \"type\": \"ocr\"\n        },\n        {\n            \"type\": \"summarization\"\n        },\n        {\n            \"type\": \"translation\",\n            \"target_language\": \"{{target_language}}\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/test/workflow/complete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"test",
+								"workflow",
+								"complete"
+							]
+						},
+						"description": "Test complete workflow: OCR → Summarization → Translation."
+					}
+				}
+			],
+			"description": "End-to-end workflow testing scenarios."
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global pre-request script",
+					"console.log('🚀 Request starting:', pm.info.requestName);"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test script",
+					"if (pm.response.code >= 400) {",
+					"    console.log('❌ Request failed:', pm.response.code, pm.response.status);",
+					"    console.log('Response:', pm.response.text());",
+					"} else {",
+					"    console.log('✅ Request successful:', pm.response.code, pm.response.status);",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "worker_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+}
